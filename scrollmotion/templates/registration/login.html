@@ -1,0 +1,32 @@
+{% extends "registration/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    <div class="form-wrap">
+
+        <img class='logo' src="{% static 'img/scrollmotion_logo.png' %}"/>
+
+        {% if form.errors %}
+        <div class="alert alert-warning alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+          <span>Your username and password didn't match.</span>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {{ form.username|attr:"placeholder:Username" }}
+            {{ form.password|attr:"placeholder:Password" }}
+
+            <input type="submit" value="login" class="btn btn-info"/>
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+
+        <a href="{% url 'register' %}" class="register-link">Register</a>
+
+    </div>
+
+{% endblock %}

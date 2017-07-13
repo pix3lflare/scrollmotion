@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Passion+One" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+
+        <script src="{% static 'js/csrf.js' %}"></script>
+
+        <!-- Load Babel -->
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+        <!-- Load ReactJS -->
+        <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+        <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+
+    </head>
+
+    <body>
+
+        <div id="image-manager-container"></div>
+
+        <!-- Image Manager App -->
+        <script>
+            let squareImage = "{% static 'img/square.png' %}";
+            let logoImage = "{% static 'img/scrollmotion_logo.png' %}";
+        </script>
+
+        <script type="text/babel" src="{% static 'js/image_manager.js' %}"></script>
+
+        <script>
+            /*
+            $(document).ready(function(){
+                console.log('document is ready');
+
+                $('#upload-btn').click(function(){
+                    console.log('update image');
+                    $('#newImageInput').click();
+                });
+
+                $('#newImageInput').change(function(){
+                    console.log('new image selected');
+
+                    var data = new FormData();
+                    data.append('image', $('#newImageInput')[0].files[0]);
+                    data.append('user', 1);
+
+                    var _this = this;
+                    $.ajax({
+                        url: '/image/',
+                        type: 'POST',
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        success: function(data, textStatus, jqXHR)
+                        {
+                            console.log(data);
+                        }
+                    }, 'json');
+
+                });
+            });
+            */
+        </script>
+    </body>
+
+</html>

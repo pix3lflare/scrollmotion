@@ -1,0 +1,33 @@
+{% extends "registration/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+    <div class="form-wrap">
+
+        <img class='logo' src="{% static 'img/scrollmotion_logo.png' %}"/>
+
+        {% if form.errors %}
+        <div class="alert alert-warning alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+          <span>{{error}}</span>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+
+            {{ form.username|attr:"placeholder:Username" }}
+            {{ form.password1|attr:"placeholder:Password" }}
+            {{ form.password2|attr:"placeholder:Confirm Password" }}
+
+            <input type="submit" value="Register" class="btn btn-info"/>
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+
+        <a href="{% url 'login' %}">Login</a>
+
+    </div>
+
+{% endblock %}

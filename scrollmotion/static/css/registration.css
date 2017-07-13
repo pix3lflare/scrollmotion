@@ -1,0 +1,51 @@
+body{
+    background: url(../img/registration_bg.jpg) no-repeat center center fixed;
+    background-size: cover;
+    margin: 0px;
+    padding: 0px;
+}
+
+.content-wrap{
+    position: absolute;
+    background: rgba(0,0,0,0.9);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-wrap{
+    width: 230px;
+    text-align: center;
+}
+
+.logo{
+
+}
+
+form{
+
+}
+
+form input[type='text'], form input[type='password']{
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    outline: none;
+    padding: 0px;
+    line-height: 30px;
+    text-indent: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+form input[type='submit']{
+    outline: none;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.register-link{
+
+}
