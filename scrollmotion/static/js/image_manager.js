@@ -2,22 +2,27 @@ class ImageManagerApp extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			images: []
+			images: [],
+			selectImageIndex: null,
+			imageData: null,
 		}
 
 		this.fetchImages = this.fetchImages.bind(this);
 		this.selectUploadImage = this.selectUploadImage.bind(this);
 		this.uploadImage = this.uploadImage.bind(this);
+		this.showImageDetails = this.showImageDetails.bind(this);
+		this.selectOriginal = this.selectOriginal.bind(this);
+		this.selectCompressedOne = this.selectCompressedOne.bind(this);
+		this.selectCompressedTwo = this.selectCompressedTwo.bind(this);
 
 		// Fetch User Images
 		this.fetchImages();
 	}
 
 	fetchImages(){
-		console.log('fetch images');
+		console.log('Fetch Images');
 		let _this = this;
 		$.get('/image/', function(images){
-			console.log('user images returned');
 			console.log(images);
 			_this.setState({images: images});
 		}, 'json')
@@ -29,7 +34,8 @@ class ImageManagerApp extends React.Component {
     }
 
 	uploadImage(){
-        var data = new FormData();
+		let _this = this;
+        let data = new FormData();
         data.append('image', this.uploadInput.files[0]);
         $.ajax({
             url: '/image/',
@@ -40,20 +46,77 @@ class ImageManagerApp extends React.Component {
             success: function(data, textStatus, jqXHR)
             {
                 console.log(data);
+                _this.fetchImages();
             }
         }, 'json');
 	}
 
+	showImageDetails(index){
+		console.log('Show image details: ', index);
+		this.setState({
+						selectImageIndex: index,
+						imageData: this.state.images[index]
+						});
+		$("#detailsModal").modal('show');
+	}
+
+	selectOriginal(){
+		console.log('Select Original');
+		let index = this.state.selectImageIndex;
+		let imageData = this.state.images[index];
+		this.setState({imageData: imageData});
+	}
+
+	selectCompressedOne(){
+		console.log('Select Compressed One');
+		let index = this.state.selectImageIndex;
+		let imageData = this.state.images[index].compressed_one;
+		this.setState({imageData: imageData});
+	}
+
+	selectCompressedTwo(){
+		console.log('Select Compressed Two');
+		let index = this.state.selectImageIndex;
+		let imageData = this.state.images[index].compressed_two;
+		this.setState({imageData: imageData});
+	}
+
     render(){
-        let images = this.state.images.map(function(image){
+        let _this = this;
+        let images = this.state.images.map(function(image, index){
             return (
-	            <div className="col-md-2 image-item-wrap">
-                    <div className="image-item" data-toggle="modal" data-target="#detailsModal">
-                        <img src={squareImage} style={{background: 'url('+image.image_url+') center center', backgroundSize: 'cover'}}/>
+	            <div className="col-md-2 image-item-wrap" onClick={()=>_this.showImageDetails(index)}>
+                    <div className="image-item">
+                        <img src={squareImage} style={{background: 'url('+image.url+') center center', backgroundSize: 'cover'}}/>
                     </div>
                 </div>
             );
         });
+
+        let image = this.state.imageData;
+        let imageDetails = null;
+        if(image){
+            imageDetails = (
+                                <div className="main-section">
+                                    <img src={image.url}/>
+                                    <div className="attribute-group">
+                                        <div className="attribute">
+                                            <div className="name">Size: </div>
+                                            <div className="value">{Math.round(image.size/1000)}kb</div>
+                                        </div>
+                                        <div className="attribute">
+                                            <div className="name">Type: </div>
+                                            <div className="value">JPEG</div>
+                                        </div>
+                                        <div className="attribute">
+                                            <div className="name">Quality: </div>
+                                            <div className="value">{image.quality}</div>
+                                        </div>
+                                    </div>
+                                    <a className="btn btn-info" href={image.url} download>Download</a>
+                                </div>
+            );
+        }
         return (
             <div>
                 <div className="modal fade" id="detailsModal">
@@ -65,32 +128,11 @@ class ImageManagerApp extends React.Component {
                             </div>
                             <div className="modal-body">
                                 <div className="side-section">
-                                    <div className="img-btn">Original</div>
-                                    <div className="img-btn">Compressed 1</div>
-                                    <div className="img-btn">Compressed 2</div>
+                                    <div className="img-btn" onClick={this.selectOriginal}>Original</div>
+                                    <div className="img-btn" onClick={this.selectCompressedOne}>Compressed 1</div>
+                                    <div className="img-btn" onClick={this.selectCompressedTwo}>Compressed 2</div>
                                 </div>
-                                <div className="main-section">
-                                    <img src="https://s3.amazonaws.com/scrollmotion/original/elephant.jpg"/>
-                                    <div className="attribute-group">
-                                        <div className="attribute">
-                                            <div className="name">Name</div>
-                                            <div className="value">something.jpg</div>
-                                        </div>
-                                        <div className="attribute">
-                                            <div className="name">Size</div>
-                                            <div className="value">13kb</div>
-                                        </div>
-                                        <div className="attribute">
-                                            <div className="name">Type</div>
-                                            <div className="value">JPEG</div>
-                                        </div>
-                                        <div className="attribute">
-                                            <div className="name">Quality</div>
-                                            <div className="value">80</div>
-                                        </div>
-                                    </div>
-                                    <button className="btn btn-info">Download</button>
-                                </div>
+                                {imageDetails}
                             </div>
                         </div>
                     </div>

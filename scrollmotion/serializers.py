@@ -5,27 +5,29 @@ from rest_framework import serializers
 class CompressedImageOneSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompressedImageOne
-        fields = '__all__'
+        fields = ('id', 'url', 'name', 'size', 'quality')
 
 
 class CompressedImageTwoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CompressedImageTwo
-        fields = '__all__'
+        fields = ('id', 'url', 'name', 'size', 'quality')
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
-    name = serializers.SerializerMethodField()
-    size = serializers.SerializerMethodField()
-    compressed_one = CompressedImageOneSerializer()
-    compressed_two = CompressedImageTwoSerializer()
+    url = serializers.SerializerMethodField(required=False)
+    name = serializers.SerializerMethodField(required=False)
+    size = serializers.SerializerMethodField(required=False)
+    quality = serializers.SerializerMethodField(required=False)
+    compressed_one = CompressedImageOneSerializer(required=False)
+    compressed_two = CompressedImageTwoSerializer(required=False)
 
     class Meta:
         model = Image
-        fields = ('id', 'image_url', 'name', 'size', 'compressed_one', 'compressed_two')
+        fields = ('id', 'user', 'image', 'url', 'name', 'size', 'quality', 'compressed_one', 'compressed_two')
 
-    def get_image_url(self, obj):
+    def get_url(self, obj):
         return obj.image.url
 
     def get_name(self, obj):
@@ -34,4 +36,6 @@ class ImageSerializer(serializers.ModelSerializer):
     def get_size(self, obj):
         return obj.image.size
 
+    def get_quality(self, obj):
+        return 100
 

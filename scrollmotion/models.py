@@ -25,7 +25,6 @@ class Image(models.Model):
 
 @receiver(post_save, sender=Image)
 def image_post_save(sender, instance, **kwargs):
-
 	if instance.compressed_one is None:
 		print 'Set Compressed One'
 		instance.compressed_one = CompressedImageOne.objects.create(original_image=instance)
@@ -54,15 +53,26 @@ class CompressedImage(models.Model):
 	size = models.IntegerField(default=0)
 	image_type = models.CharField(max_length=5, choices=IMAGE_TYPES, default=JPEG_TYPE)
 
+	@property
+	def quality(self):
+		return self.QUALITY
+
 	def compress_image(self):
 		lambda_compression_url = "https://jsiyitfs89.execute-api.us-east-1.amazonaws.com/prod/compressimage"
+		print 'Original Image: '
+		print self.original_image
+
 		params = {
 			'bucket': settings.AWS_STORAGE_BUCKET_NAME,
 			'original_key': self.original_image.image.name,
 			'compressed_key': '{}/{}'.format(self.BUCKET_FOLDER, self.name),
 			'quality': self.QUALITY
 		}
+		print params
+
 		resp = requests.post(lambda_compression_url, json=params)
+		print resp
+
 		self.url = resp.json()['url']
 		self.size = resp.json()['size']
 

@@ -12,6 +12,8 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         data = request.data
+        print 'IMAGe DATA: '
+        print data
         data['user'] = self.request.user.id
         serializer = ImageSerializer(data=request.data)
         if serializer.is_valid():
@@ -19,6 +21,6 @@ class ImageViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
 
     def list(self, request):
-        images = Image.objects.filter(user=self.request.user)
+        images = Image.objects.filter(user=self.request.user).select_related('compressed_one', 'compressed_two')
         serializer = ImageSerializer(images, many=True)
         return Response(serializer.data)
