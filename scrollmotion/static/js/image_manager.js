@@ -148,7 +148,7 @@ class ImageManagerApp extends React.Component {
 
                         <div id="image-uploader" className="control-group">
                             <button id="upload-btn" type="button" className="btn btn-info" onClick={this.selectUploadImage} >Upload</button>
-                            <a href="{% url 'logout' %}" className="btn btn-info">Logout</a>
+                            <a href="/logout/" className="btn btn-info">Logout</a>
                         </div>
                     </div>
 
